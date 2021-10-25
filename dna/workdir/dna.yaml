@@ -1,0 +1,9 @@
+---
+manifest_version: "1"
+name: myTestGO-DNA
+uuid: 00000000-0000-0000-0000-000000000000
+properties: ~
+zomes: 
+  - name: my_test_go_zome
+    bundled: ../../target/wasm32-unknown-unknown/release/my_test_go_zome.wasm
+
