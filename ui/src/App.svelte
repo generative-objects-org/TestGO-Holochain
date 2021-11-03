@@ -4,18 +4,18 @@
 	export let appWebsocket;
 	export let cell_id;
 
-	let postHash;
+	let createCustomerHash;
 
-	$: postHash;
+	$: createCustomerHash;
 
 	 appWebsocket.callZome({
 		cap: null,
 		cell_id: cell_id,
 		zome_name: 'my_test_go_zome',
-		fn_name: 'create_post',
-		payload: 'my post',
+		fn_name: 'create_customer',
+		payload: { first_name : 'Charles', last_name : 'Almeida' },
 		provenance: cell_id[1],
-	}).then(hash => postHash = hash);
+	}).then(hash => createCustomerHash = hash);
 
 </script>
 
@@ -23,8 +23,8 @@
 	<h1>Hello {name}!</h1>
 	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
 
-	{#if postHash}
-		<span>Created new Holochain entry! Post with hash {postHash}</span>
+	{#if createCustomerHash}
+		<span>Created new Holochain entry! Customer with hash {createCustomerHash}</span>
 	{:else}
 		<span>Creating...</span>
 	{/if}

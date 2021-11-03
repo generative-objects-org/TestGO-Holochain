@@ -1,26 +1,30 @@
 use hdk::prelude::*;
 use hdk::prelude::holo_hash::*;
 
-#[hdk_entry(id = "post")]
-pub struct Post(String);
+mod customer;
+mod utils;
+
 
 entry_defs![
-    Post::entry_def()
+    // Our implementation of game_code uses `anchor` helper method,
+    // which requires us to add the Anchor and Path entry definitions
+    Anchor::entry_def(),
+    Path::entry_def(),
+    customer::Customer::entry_def()
 ];
 
 #[hdk_extern]
-pub fn create_post(post: Post) -> ExternResult<EntryHashB64> {
-    create_entry(&post)?;
-    let hash = hash_entry(&post)?;
-
-    Ok(EntryHashB64::from(hash))
+pub fn create_customer(customer : customer::Customer) -> ExternResult<EntryHashB64> {
+    customer::create_customer(customer.first_name, customer.last_name)
 }
 
 #[hdk_extern]
-pub fn get_post(entry_hash: EntryHashB64) -> ExternResult<Post> {
-    let element = get(EntryHash::from(entry_hash), GetOptions::default())?.ok_or(WasmError::Guest(String::from("Post not found")))?;
-
-    let post: Post = element.entry().to_app_option()?.ok_or(WasmError::Guest(String::from("Malformed post")))?;
-
-    Ok(post)
+pub fn get_customer(hash : EntryHash) -> ExternResult<customer::Customer> {
+    customer::get_customer(hash)
 }
+
+#[hdk_extern]
+pub fn get_all_customers(_: ()) -> ExternResult<Vec<customer::Customer>> {
+    customer::get_all_customers()
+}
+
